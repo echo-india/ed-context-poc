@@ -14,8 +14,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 //Import our Inputs
 import Input_one from "./components/Input_one";
 import Input_two from "./components/Input_two";
-import HubWrapper from "./components/HubWrapper";
-
 
 //Styles
 const useStyles = makeStyles({
@@ -64,7 +62,7 @@ const orgPromise = (num) =>
   new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("USR16136486231665MW53D0L8I");
-    }, 2000);
+    }, 1000);
   });
 
 function App() {
@@ -77,12 +75,9 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({ data1: 2, data2: 3 });
 
-  const [orgData, setOrgData] = useState({ name: "" });
-
   const [childData, setChildData] = useState({ data: "", loading: true });
-  const [hubData, setHubData] = useState({ data: {}, currHub:"",loading: true });
 
-  /*useEffect(async () => {
+  useEffect(async () => {
     //setLoading(true);
 
     const datafrompromise = await myPromise(22);
@@ -96,32 +91,6 @@ function App() {
 
     setChildData({ data: dataforchild, loading: false });
   }, []);
-*/
-  useEffect(async () => {
-    //setLoading(true);
-
-    const userId = await orgPromise("USR16136486231665MW53D0L8I");
-
-    setOrgData((prev) => {
-      return { name: userId };
-    });
-
-    setLoading(false);
-    const dataforHub = await fetch(
-      `https://develb.metaecho.com/organization/api/v1/user/${userId}`,
-      {
-        headers: {
-          Authorization: `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ4TXBHRkR5RVJScU45L2JiTVBENHo0bC9vY1BnNHM4MDJieFpXQWRJUjUvQkk0dUR6T1JRSHNCVnFRb3RrMUxXeGd4Ym5IQk9DUS9vR0dEZkhTdFVWUElTY0hNVDM3VXErYmxCZmNJVklhU3doRlRUQWpnUDdzSXBiblVxb0RxSWJlTUZaVnVUYXp3enVpaWNNYjI0WG52eXNZSTAvemVOL1MrYTAzanM1cG5zRVgyQS8yQndLcVpGQkEzczVCb0hUWnlHSmZoY0JJSStOQVptbXd4eUczWTVnUzJiSlZVcGhqTnl6ckN1MUJEZysvOWRJaGFidUg1ZnBjbW1XN2M3cjl5YTBMbEhGdk5BTzVJN2wxbTJ3K09BTUZ3VVlOVTdYM1VQdUkvYiszNW9hQU1FYUwxanprVnUvOFhoclg1RjBSKzZuc0J5QUEvN1pBK3dtOUpVMEZiUnRLQzQ2VzFGQjZ3bTVxaXh4dWJrc1gxYURjbGNDK3grVjV2ZlIwVU0iLCJpYXQiOjE2MTQ2NTc2NzgsImV4cCI6MTYxNDc0NDA3OH0.JjqwLmMD0abUATT43IRmduMTUlYOAHFyC2XdXgFiARI`,
-        },
-      }
-    ).then((res) => res.json());
-
-    setHubData({ data: dataforHub.resultBody.organization, 
-        currHub:dataforHub.resultBody.organization[2].organizationId, 
-        loading: false });
-  }, []);
-
-  console.log("rendered app")
 
   return (
     <Container maxWidth="lg">
@@ -137,31 +106,27 @@ function App() {
           noWrap
           className={classes.toolbarTitle}
         >
-         {/* Pass data between react sibling components*/}
+          Pass data between react sibling components
         </Typography>
       </Toolbar>
 
       {/*Inputs*/}
       <Grid container spacing={1}>
-        <SuperContext.Provider value={{ data, loading }}>
+         <SuperContext.Provider value={{ data, loading }}>
           <AppContext.Provider value={{ state, dispatch }}>
+            
             <ChildContext.Provider
               value={{ childstate: state.inputText + "child" }}
             >
               <ChildToSuper.Provider value={{ childData }}>
-                {/*<Input_one />
-                <Input_two />*/}
-                <OrgContext.Provider value={{ data, loading }}>
-                  <HubContext.Provider
-                    value={{ hubData, setHubData }}
-                  >
-<HubWrapper/>
-                  </HubContext.Provider>
-                </OrgContext.Provider>
+                <Input_one />
+                <Input_two />
               </ChildToSuper.Provider>
             </ChildContext.Provider>
           </AppContext.Provider>
         </SuperContext.Provider>
+
+      
       </Grid>
 
       {/*display testText value*/}
@@ -174,7 +139,7 @@ function App() {
           noWrap
           className={classes.toolbarTitle}
         >
-          {/*{state.testText}*/}
+          {state.testText}
         </Typography>
       </Toolbar>
     </Container>

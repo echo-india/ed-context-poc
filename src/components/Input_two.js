@@ -12,7 +12,7 @@ import SearchIcon from '@material-ui/icons/Search';
 
 
 //Import Context
-import { AppContext } from '../App'
+import { AppContext, ChildContext, ChildToSuper, SuperContext } from '../App'
 
 const useStyles = makeStyles({
     root: {
@@ -36,14 +36,29 @@ export default function Input_two() {
     const classes = useStyles();
 
     const {state, dispatch} = useContext(AppContext);
+    const {childstate} = useContext(ChildContext);
+
+    const {data, loading} = useContext(SuperContext);
+
+    const {childData} = useContext(ChildToSuper);
+
+    /*const changeInputValue = (newValue) => {
+
+        dispatch({ type: 'UPDATE_INPUT', data: newValue,});
+    };*/
 
     const changeInputValue = (newValue) => {
 
-        dispatch({ type: 'UPDATE_INPUT', data: newValue,});
+       // dispatch({ type: 'UPDATE_INPUT', data: newValue,});
+
+        dispatch((prev) => {
+            return {...prev,inputText: newValue}
+        })
     };
 
     return(
         <React.Fragment>
+
             <Grid item xs={12} md={6}>
                 <Paper className={classes.root}>
                     <InputBase
@@ -53,10 +68,16 @@ export default function Input_two() {
                         onChange={e => changeInputValue(e.target.value)}
                     />
                     <IconButton className={classes.iconButton} aria-label="search">
-                        <SearchIcon />
+                       {/* <SearchIcon />*/}
                     </IconButton>
+                    
                 </Paper>
             </Grid>
+           {/* Original State: :{JSON.stringify(state,null,2) }
+            Child State:{JSON.stringify(childstate,null,2) }*/}
+
+          { loading ? <div>...Loading</div>:<div>{data.data2}</div>}
+          { childData.loading ? <div>...Loading Child</div>:<div>{childData.data}</div>}
         </React.Fragment>
     )
 }

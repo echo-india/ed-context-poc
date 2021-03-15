@@ -40,6 +40,16 @@ export default function Input_one() {
         dispatch({ type: 'UPDATE_INPUT', data: newValue,});
     };
 
+
+    const changeInputValue2 = (newValue) => {
+
+        // dispatch({ type: 'UPDATE_INPUT', data: newValue,});
+ 
+         dispatch((prev) => {
+             return {...prev,inputText: newValue}
+         })
+     };
+
     return(
         <React.Fragment>
             <Grid item xs={12} md={6}>
@@ -48,7 +58,7 @@ export default function Input_one() {
                         className={classes.input}
                         placeholder="Input one"
                         value={state.inputText}
-                        onChange={e => changeInputValue(e.target.value)}
+                        onChange={e => changeInputValue2(e.target.value)}
                     />
                     <IconButton className={classes.iconButton} aria-label="search">
                         <SearchIcon />
